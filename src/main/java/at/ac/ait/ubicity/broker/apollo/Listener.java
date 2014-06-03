@@ -16,10 +16,9 @@ public class Listener extends AbstractBrokerClient implements MessageListener {
 
 	private static final Logger logger = Logger.getLogger(Listener.class);
 
-	@Override
 	public void init() throws UbicityBrokerException {
 
-		super.init();
+		super.init("", "");
 
 	}
 

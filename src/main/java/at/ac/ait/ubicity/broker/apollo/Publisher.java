@@ -15,10 +15,9 @@ public class Publisher extends AbstractBrokerClient {
 
 	private static final Logger logger = Logger.getLogger(Publisher.class);
 
-	@Override
 	public void init() throws UbicityBrokerException {
 
-		super.init();
+		super.init("", "");
 	}
 
 	public MessageProducer createProducer(String dest) throws JMSException {

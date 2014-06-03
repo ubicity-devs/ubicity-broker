@@ -21,9 +21,11 @@ public abstract class AbstractBrokerClient {
 	/**
 	 * Sets up the Broker connection with configured username & password.
 	 * 
-	 * @throws BrokerException
+	 * @param user
+	 * @param pwd
+	 * @throws UbicityBrokerException
 	 */
-	protected void init() throws UbicityBrokerException {
+	protected void init(String user, String pwd) throws UbicityBrokerException {
 		PropertyLoader config = new PropertyLoader(
 				Listener.class.getResource("/broker_client.cfg"));
 
@@ -31,9 +33,8 @@ public abstract class AbstractBrokerClient {
 		factory.setBrokerURI(config.getString("addon.apollo.client.host"));
 
 		try {
-			connection = (StompJmsConnection) factory.createConnection(
-					config.getString("addon.apollo.client.pwd"),
-					config.getString("addon.apollo.client.host"));
+			connection = (StompJmsConnection) factory.createConnection(user,
+					pwd);
 			connection.start();
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 		} catch (JMSException e) {
