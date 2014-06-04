@@ -1,7 +1,9 @@
 package at.ac.ait.ubicity.broker.apollo;
 
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 import net.xeoh.plugins.base.annotations.Thread;
 import net.xeoh.plugins.base.annotations.events.Init;
+import net.xeoh.plugins.base.annotations.events.Shutdown;
 
 import org.apache.activemq.apollo.broker.Broker;
 import org.apache.activemq.apollo.dto.AcceptingConnectorDTO;
@@ -10,14 +12,11 @@ import org.apache.activemq.apollo.dto.VirtualHostDTO;
 import org.apache.activemq.apollo.stomp.dto.StompDTO;
 import org.apache.log4j.Logger;
 
-import at.ac.ait.ubicity.commons.broker.BrokerConsumer;
-import at.ac.ait.ubicity.commons.broker.UbicityBroker;
-import at.ac.ait.ubicity.commons.broker.events.EventEntry;
-import at.ac.ait.ubicity.commons.broker.exceptions.UbicityBrokerException;
+import at.ac.ait.ubicity.commons.interfaces.UbicityPlugin;
 import at.ac.ait.ubicity.commons.util.PropertyLoader;
 
-//@PluginImplementation
-public class ApolloBroker implements UbicityBroker {
+@PluginImplementation
+public class ApolloBroker implements UbicityPlugin {
 
 	private static Broker broker = new Broker();
 
@@ -32,7 +31,7 @@ public class ApolloBroker implements UbicityBroker {
 	public void init() {
 
 		PropertyLoader config = new PropertyLoader(
-				Listener.class.getResource("/broker_server.cfg"));
+				ApolloBroker.class.getResource("/broker_server.cfg"));
 
 		name = config.getString("addon.broker.name");
 		embedded = config.getBoolean("addon.broker.server.embedded");
@@ -65,19 +64,21 @@ public class ApolloBroker implements UbicityBroker {
 		VirtualHostDTO host = new VirtualHostDTO();
 		host.id = config.getString("addon.apollo.server.vh.id");
 		host.host_names.add(config.getString("addon.apollo.server.vh.name"));
-
 		brokerCfg.virtual_hosts.add(host);
 
 		// TCP transport
 		AcceptingConnectorDTO tcp = new AcceptingConnectorDTO();
 		tcp.id = config.getString("addon.apollo.server.tcp.connector.id");
 		tcp.bind = config.getString("addon.apollo.server.tcp.connector.bind");
+		tcp.protocol = "stomp";
+		tcp.protocols.add(new StompDTO());
 		brokerCfg.connectors.add(tcp);
 
 		// Websocket transport
 		final AcceptingConnectorDTO ws = new AcceptingConnectorDTO();
 		ws.id = config.getString("addon.apollo.server.ws.connector.id");
 		ws.bind = config.getString("addon.apollo.server.ws.connector.bind");
+		ws.protocol = "stomp";
 		ws.protocols.add(new StompDTO());
 		brokerCfg.connectors.add(ws);
 
@@ -85,24 +86,13 @@ public class ApolloBroker implements UbicityBroker {
 	}
 
 	@Override
-	public void register(BrokerConsumer consumer) {
-		logger.info("Registered consumer: " + consumer.getName());
-	}
-
-	@Override
-	public void deRegister(BrokerConsumer consumer) {
-		logger.info("Deregistered consumer: " + consumer.getName());
-	}
-
-	@Override
-	public void publish(EventEntry event) throws UbicityBrokerException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
+	@Shutdown
 	public void shutdown() {
 		if (embedded) {
+			try {
+				java.lang.Thread.sleep(500);
+			} catch (InterruptedException e) {
+			}
 			broker.stop(new Runnable() {
 				@Override
 				public void run() {
