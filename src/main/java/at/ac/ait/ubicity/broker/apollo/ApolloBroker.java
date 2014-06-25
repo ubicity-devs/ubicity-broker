@@ -33,8 +33,8 @@ public class ApolloBroker implements UbicityPlugin {
 		PropertyLoader config = new PropertyLoader(
 				ApolloBroker.class.getResource("/broker_server.cfg"));
 
-		name = config.getString("addon.broker.name");
-		embedded = config.getBoolean("addon.broker.server.embedded");
+		name = config.getString("plugin.broker.name");
+		embedded = config.getBoolean("plugin.broker.server.embedded");
 
 		if (embedded == false) {
 			logger.info("Using external Apollo broker!");
@@ -62,22 +62,27 @@ public class ApolloBroker implements UbicityPlugin {
 
 		// Brokers support multiple virtual hosts.
 		VirtualHostDTO host = new VirtualHostDTO();
-		host.id = config.getString("addon.apollo.server.vh.id");
-		host.host_names.add(config.getString("addon.apollo.server.vh.name"));
+		host.id = config.getString("plugin.apollo.server.vh.id");
+		host.host_names.add(config.getString("plugin.apollo.server.vh.name"));
 		brokerCfg.virtual_hosts.add(host);
 
 		// TCP transport
 		AcceptingConnectorDTO tcp = new AcceptingConnectorDTO();
-		tcp.id = config.getString("addon.apollo.server.tcp.connector.id");
-		tcp.bind = config.getString("addon.apollo.server.tcp.connector.bind");
+		tcp.id = config.getString("plugin.apollo.server.tcp.connector.id");
+		tcp.bind = config.getString("plugin.apollo.server.tcp.connector.bind");
+		tcp.bind = tcp.bind + ":"
+				+ config.getString("env.apollo.broker.tcp.port");
+
 		tcp.protocol = "stomp";
 		tcp.protocols.add(new StompDTO());
 		brokerCfg.connectors.add(tcp);
 
 		// Websocket transport
 		final AcceptingConnectorDTO ws = new AcceptingConnectorDTO();
-		ws.id = config.getString("addon.apollo.server.ws.connector.id");
-		ws.bind = config.getString("addon.apollo.server.ws.connector.bind");
+		ws.id = config.getString("plugin.apollo.server.ws.connector.id");
+		ws.bind = config.getString("plugin.apollo.server.ws.connector.bind");
+		ws.bind = ws.bind + ":" + config.getString("env.apollo.broker.ws.port");
+
 		ws.protocol = "stomp";
 		ws.protocols.add(new StompDTO());
 		brokerCfg.connectors.add(ws);
