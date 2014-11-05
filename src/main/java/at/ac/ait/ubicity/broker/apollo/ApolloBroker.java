@@ -78,15 +78,15 @@ public class ApolloBroker implements UbicityPlugin {
 		brokerCfg.connectors.add(tcp);
 
 		// Websocket transport
-		final AcceptingConnectorDTO ws = new AcceptingConnectorDTO();
-		ws.id = config.getString("plugin.apollo.server.ws.connector.id");
-		ws.bind = config.getString("plugin.apollo.server.ws.connector.bind");
-		ws.bind = ws.bind + ":" + config.getString("env.apollo.broker.ws.port");
-
-		ws.protocol = "stomp";
-		ws.protocols.add(new StompDTO());
-		brokerCfg.connectors.add(ws);
-
+		/*
+		 * final AcceptingConnectorDTO ws = new AcceptingConnectorDTO(); ws.id =
+		 * config.getString("plugin.apollo.server.ws.connector.id"); ws.bind =
+		 * config.getString("plugin.apollo.server.ws.connector.bind"); ws.bind =
+		 * ws.bind + ":" + config.getString("env.apollo.broker.ws.port");
+		 * 
+		 * ws.protocol = "stomp"; ws.protocols.add(new StompDTO());
+		 * brokerCfg.connectors.add(ws);
+		 */
 		broker.setConfig(brokerCfg);
 	}
 
