@@ -33,7 +33,7 @@ public class ApolloBroker implements UbicityPlugin {
 		PropertyLoader config = new PropertyLoader(
 				ApolloBroker.class.getResource("/broker_server.cfg"));
 
-		name = config.getString("plugin.broker.name");
+		name = config.getString("plugin.apollo.name");
 		embedded = config.getBoolean("plugin.broker.server.embedded");
 
 		if (embedded == false) {
