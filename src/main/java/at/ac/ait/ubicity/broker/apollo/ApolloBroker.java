@@ -30,8 +30,7 @@ public class ApolloBroker implements UbicityPlugin {
 	@Init
 	public void init() {
 
-		PropertyLoader config = new PropertyLoader(
-				ApolloBroker.class.getResource("/broker_server.cfg"));
+		PropertyLoader config = new PropertyLoader(ApolloBroker.class.getResource("/broker_server.cfg"));
 
 		name = config.getString("plugin.apollo.name");
 		embedded = config.getBoolean("plugin.broker.server.embedded");
@@ -69,24 +68,19 @@ public class ApolloBroker implements UbicityPlugin {
 		// TCP transport
 		AcceptingConnectorDTO tcp = new AcceptingConnectorDTO();
 		tcp.id = config.getString("plugin.apollo.server.tcp.connector.id");
-		tcp.bind = config.getString("plugin.apollo.server.tcp.connector.bind");
-		tcp.bind = tcp.bind + ":"
-				+ config.getString("env.apollo.broker.tcp.port");
-
+		tcp.bind = config.getString("plugin.apollo.server.tcp.connector.bind") + ":" + config.getString("env.apollo.broker.tcp.port");
 		tcp.protocol = "stomp";
 		tcp.protocols.add(new StompDTO());
 		brokerCfg.connectors.add(tcp);
 
 		// Websocket transport
-		/*
-		 * final AcceptingConnectorDTO ws = new AcceptingConnectorDTO(); ws.id =
-		 * config.getString("plugin.apollo.server.ws.connector.id"); ws.bind =
-		 * config.getString("plugin.apollo.server.ws.connector.bind"); ws.bind =
-		 * ws.bind + ":" + config.getString("env.apollo.broker.ws.port");
-		 * 
-		 * ws.protocol = "stomp"; ws.protocols.add(new StompDTO());
-		 * brokerCfg.connectors.add(ws);
-		 */
+		// final AcceptingConnectorDTO ws = new AcceptingConnectorDTO();
+		// ws.id = config.getString("plugin.apollo.server.ws.connector.id");
+		// ws.bind = config.getString("plugin.apollo.server.ws.connector.bind") + ":" + config.getString("env.apollo.broker.ws.port");
+		// ws.protocol = "stomp";
+		// ws.protocols.add(new StompDTO());
+		// brokerCfg.connectors.add(ws);
+
 		broker.setConfig(brokerCfg);
 	}
 
