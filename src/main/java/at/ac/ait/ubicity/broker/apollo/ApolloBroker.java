@@ -22,7 +22,7 @@ public class ApolloBroker implements UbicityPlugin {
 
 	private static final Logger logger = Logger.getLogger(ApolloBroker.class);
 
-	private static boolean embedded = true;
+	private boolean embedded = true;
 
 	private String name;
 
